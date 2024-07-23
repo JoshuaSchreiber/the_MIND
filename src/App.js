@@ -1,4 +1,5 @@
 import { Client } from "boardgame.io/client";
+// import { Client, Local, SocketIO } from 'boardgame.io';
 import { Local, SocketIO } from "boardgame.io/multiplayer";
 import { resetOnClicks } from "./canvas";
 import { TicTacToe } from "./TicTacToe";
