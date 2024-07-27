@@ -1,10 +1,13 @@
 import { Client } from "boardgame.io/client";
-// import { Client, Local, SocketIO } from 'boardgame.io';
 import { Local, SocketIO } from "boardgame.io/multiplayer";
 import { resetOnClicks } from "./canvas";
 import { TicTacToe } from "./TicTacToe";
+import {drawPicture, onClick} from "./canvas.js";
 
 const isMultiplayer = import.meta.env.VITE_REMOTE === "true";
+
+let canvas = document.getElementById("canvas");
+let ctx = canvas.getContext("2d");
 
 const multiplayer = isMultiplayer
   ? SocketIO({ server: "localhost:8000" })
@@ -24,62 +27,73 @@ class GameClient {
     this.attachListeners();
   }
 
+
   update(state) {
-    // Get all the board cells.
-    const cells = this.rootElement.querySelectorAll(".cell");
-    // Update cells to display the values in game state.
-    cells.forEach((cell) => {
-      const cellId = parseInt(cell.dataset.id);
-      const cellValue = state.G.cells[cellId];
-      cell.textContent = cellValue !== null ? cellValue : "";
-    });
-    // Get the gameover message element.
-    const messageEl = this.rootElement.querySelector(".winner");
-    // Update the element to show a winner if any.
+    let allEmpty = true;
+    for(let i = 0; i < state.G.length; i++){
+      if(state.G[i] != null){
+        allEmpty = false;
+      }
+    }
+    if(allEmpty){
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      this.createBoard()
+    }
+    ctx.fillStyle = "black";
+    ctx.textBaseline = "middle";
+    ctx.textAlign = "center";
+    ctx.font = "20px serif";
+    let id = 0;
+    for(let i = 0; i < 3; i++){
+      for(let b = 0; b < 3; b++){
+        if(state.G.cells[id] == null){
+          ctx.fillText(" ", 100+b*50, 100+i*50, 50)
+        } else{
+          ctx.fillText(state.G.cells[id], 100+b*50, 100+i*50, 50)
+        }
+        id++;
+      }
+    }
+
+
     if (state.ctx.gameover) {
-      messageEl.textContent =
-        state.ctx.gameover.winner !== undefined
-          ? "Winner: " + state.ctx.gameover.winner
-          : "Draw!";
-    } else {
-      messageEl.textContent = "";
+      if (state.ctx.gameover.winner !== undefined) {
+        setTimeout(() => alert("Winner: " + String(state.ctx.gameover.winner)), 0);
+      } else {
+        setTimeout(() => alert("Draw!"), 0);
+      }
     }
   }
 
   createBoard() {
-    // Create cells in rows for the Tic-Tac-Toe board.
-    const rows = [];
-    for (let i = 0; i < 3; i++) {
-      const cells = [];
-      for (let j = 0; j < 3; j++) {
-        const id = 3 * i + j;
-        cells.push(`<td class="cell" data-id="${id}"></td>`);
+    ctx.fillStyle = 'black'
+    ctx.fillRect(50, 50, 200, 200);
+    let change = true;
+    for(let i = 0; i < 3; i++){
+      for(let b = 0; b < 3; b++){
+        if(change){
+          ctx.fillStyle = '#F5F5DC'
+        } else {
+          ctx.fillStyle = "#D2B48C"
+        }
+        change = !change
+        ctx.fillRect(75+i*50, 75+b*50, 50, 50);
       }
-      rows.push(`<tr>${cells.join("")}</tr>`);
     }
-
-    // Add the HTML to our app <div>.
-    // We’ll use the empty <p> to display the game winner later.
-    this.rootElement.innerHTML = `
-      <table>${rows.join("")}</table>
-      <p class="winner"></p>
-    `;
   }
 
   attachListeners() {
-    // This event handler will read the cell id from a cell’s
-    // `data-id` attribute and make the `clickCell` move.
-    const handleCellClick = (event) => {
-      const id = parseInt(event.target.dataset.id);
-      this.client.moves.clickCell(id);
-    };
-    // Attach the event listener to each of the board cells.
-    const cells = this.rootElement.querySelectorAll(".cell");
-    cells.forEach((cell) => {
-      cell.onclick = handleCellClick;
-    });
+    onClick (75, 75, 50, 50, () => { this.client.moves.clickCell(0)} )
+    onClick (75+50, 75, 50, 50, () => { this.client.moves.clickCell(1)} )
+    onClick (75+100, 75, 50, 50, () => { this.client.moves.clickCell(2)} )
+    onClick (75, 75+50, 50, 50, () => { this.client.moves.clickCell(3)} )
+    onClick (75+50, 75+50, 50, 50, () => { this.client.moves.clickCell(4)} )
+    onClick (75+100, 75+50, 50, 50, () => { this.client.moves.clickCell(5)} )
+    onClick (75, 75+100, 50, 50, () => { this.client.moves.clickCell(6)} )
+    onClick (75+50, 75+100, 50, 50, () => { this.client.moves.clickCell(7)} )
+    onClick (75+100, 75+100, 50, 50, () => { this.client.moves.clickCell(8)} )
   }
 }
 
 const appElement = document.getElementById("app");
-const app = new GameClient(appElement);
+let app = new GameClient(appElement);

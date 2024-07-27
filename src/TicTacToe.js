@@ -2,7 +2,7 @@ import { INVALID_MOVE } from 'boardgame.io/core';
 
 export const TicTacToe = {
   setup: function setup() {
-    return { cells: [null, null, null, null, null, null, null, null, null] }
+    return { cells: [null, null, null, null, null, null, null, null, null]}
   },
 
   moves: {
@@ -12,7 +12,9 @@ export const TicTacToe = {
       }
       move.G.cells[cellIndex] = move.playerID;
     },
+
   },
+
 
   turn: {
     minMoves: 1,
@@ -31,19 +33,17 @@ export const TicTacToe = {
 
   ai: {
     enumerate: function enumerate(G)  {
-      return [
-        {move: 'clickCell', args: [0]},
-        {move: 'clickCell', args: [1]},
-        {move: 'clickCell', args: [2]},
-        {move: 'clickCell', args: [3]},
-        {move: 'clickCell', args: [4]},
-        {move: 'clickCell', args: [5]},
-        {move: 'clickCell', args: [6]},
-        {move: 'clickCell', args: [7]},
-        {move: 'clickCell', args: [8]},
-      ];
+      let possibleMoves = []
+      for(let i = 0; i < G.cells.length; i++){
+        if(G[i] == null){
+          possibleMoves.push({move: 'clickCell', args: [i]})
+        }
+      }
+      console.log(possibleMoves)
+      return possibleMoves
     },
   },
+
 }
 
 function isVictory(cells){
