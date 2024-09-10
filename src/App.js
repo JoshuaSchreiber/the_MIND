@@ -1,7 +1,7 @@
 import { Client } from "boardgame.io/client";
 import { Local, SocketIO } from "boardgame.io/multiplayer";
 import { resetOnClicks } from "./canvas";
-import { TicTacToe } from "./TicTacToe";
+import { TicTacToe } from "./theMIND.js";
 import {drawPicture, onClick} from "./canvas.js";
 
 const isMultiplayer = import.meta.env.VITE_REMOTE === "true";
