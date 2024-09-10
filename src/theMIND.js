@@ -2,8 +2,8 @@ import { INVALID_MOVE } from 'boardgame.io/core';
 
 export const TicTacToe = {
   setup: function setup() {
-    console.log(initialRedrawStack())
-    return {}
+    let initialRedrawStack = initialRedrawStack()
+    return {initialRedrawStack}
   },
 
   moves: {
