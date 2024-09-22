@@ -3,25 +3,21 @@ import { INVALID_MOVE } from "boardgame.io/core";
 export const TicTacToe = {
   setup: function setup(main) {
     let initialRedrawStack = initialRedrawStackDefinition();
-    let initialMiddleStack = [];
-    let initialLevel = 1;
-    let initialLives = main.ctx.playOrder.length;
-    let initalThrowingStar = 1;
-    let handsOfAllPlayers = [];
+
+
+
+
+    /** 
     for (let player of main.ctx.playOrder) {
       let handOfOnePlayer = [];
       handOfOnePlayer.push(initialRedrawStack.pop());
       // Karten werden aus dem initialRedrawStack gelöscht, ein Deck muss also später neu erstellt werden
       handsOfAllPlayers.push(handOfOnePlayer);
     }
+    */
 
     let artificialG = {
       initialRedrawStack,
-      initialMiddleStack,
-      initialLevel,
-      initialLives,
-      initalThrowingStar,
-      handsOfAllPlayers,
     };
     console.log(artificialG);
     return artificialG;
@@ -38,11 +34,39 @@ export const TicTacToe = {
 
   ai: {},
 };
+
 export function initialRedrawStackDefinition() {
   let array = [];
-  for (let i = 1; i < 101; i++) {
-    array.push(i);
+
+  for (let i = 0; i < 4; i++) {
+    let color = null;
+    if(i == 0){
+      color = "green"
+    } else if(i == 1){
+      color = "blue"
+    } else if(i == 2){
+      color = "red"
+    } else {
+      color = "yellow"
+    }
+
+    for(let y = 0; y < 10; y++){
+      let card = [y.toString(), color]
+      array.push(card);
+    }
+
+    array.push(["changeDirection", color])
+    array.push(["skipNextPlayer", color])
+    array.push(["nextPlayerDrawsTwo", color])
+
+    if(i == 0 || i == 1){
+      array.push(["selectColor", "black"])
+    } else {
+      array.push(["nextPlayerDrawsFourAndSelectColor", "black"])
+    }
   }
+  console.log(array)
+
   return shuffle(array);
 }
 
