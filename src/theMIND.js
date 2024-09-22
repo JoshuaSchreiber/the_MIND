@@ -4,21 +4,26 @@ export const TicTacToe = {
   setup: function setup(main) {
     let initialRedrawStack = initialRedrawStackDefinition();
 
-
-
-
-    /** 
+    let handsOfAllPlayers= [];
     for (let player of main.ctx.playOrder) {
       let handOfOnePlayer = [];
-      handOfOnePlayer.push(initialRedrawStack.pop());
+      for (let i = 0; i < 7; i++) {
+        handOfOnePlayer.push(initialRedrawStack.pop());
+      }
+
       // Karten werden aus dem initialRedrawStack gelöscht, ein Deck muss also später neu erstellt werden
       handsOfAllPlayers.push(handOfOnePlayer);
     }
-    */
+    let initialThrowStack = [initialRedrawStack.pop()];
+    let initialPlayingDirection = "withClock"
 
     let artificialG = {
-      initialRedrawStack,
+      initialRedrawStack, 
+      handsOfAllPlayers,
+      initialThrowStack,
+      initialPlayingDirection
     };
+
     console.log(artificialG);
     return artificialG;
   },
@@ -54,8 +59,7 @@ export function initialRedrawStackDefinition() {
       let card = [y.toString(), color]
       array.push(card);
     }
-
-    array.push(["changeDirection", color])
+array.push(["changeDirection", color])
     array.push(["skipNextPlayer", color])
     array.push(["nextPlayerDrawsTwo", color])
 
