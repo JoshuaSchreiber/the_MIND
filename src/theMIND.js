@@ -18,17 +18,32 @@ export const TicTacToe = {
     let initialPlayingDirection = "withClock"
 
     let artificialG = {
-      initialRedrawStack, 
+      "RedrawStack":initialRedrawStack, 
       handsOfAllPlayers,
-      initialThrowStack,
-      initialPlayingDirection
+      "ThrowStack":initialThrowStack,
+      "PlayingDirection":initialPlayingDirection
     };
 
     console.log(artificialG);
     return artificialG;
   },
 
-  moves: {},
+  moves: {
+    throwCard: ({G, ctx}, cardNumberInHand) => {
+      let currentPlayer = ctx.currentPlayer
+      let lastThrownCard = G.ThrowStack[G.ThrowStack.length -1]
+      let chosenCardOfPlayer = G.handsOfAllPlayers[currentPlayer][cardNumberInHand]
+      if (chosenCardOfPlayer[1] != "black") {
+        if (chosenCardOfPlayer[1] != lastThrownCard[1]){
+          if (chosenCardOfPlayer[0] != lastThrownCard[0]){
+            return INVALID_MOVE
+          }
+        }
+      }
+      G.ThrowStack.push(chosenCardOfPlayer)
+      G.handsOfAllPlayers[currentPlayer] = removeElementAtIndex(G.handsOfAllPlayers[currentPlayer], cardNumberInHand) 
+    }
+  },
 
   turn: {
     minMoves: 1,
@@ -90,4 +105,16 @@ export function shuffle(array) {
     ];
   }
   return array;
+}
+export function removeElementAtIndex(array, index) {
+  let newArray = [];
+
+
+  for (let i = 0; i < array.length ; i++) {
+      if (index != i) {
+        newArray.push(array[i])
+      }
+  }
+
+  return newArray;
 }
