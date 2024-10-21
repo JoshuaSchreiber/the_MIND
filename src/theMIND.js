@@ -1,6 +1,7 @@
 import { INVALID_MOVE } from "boardgame.io/core";
 
-export const TicTacToe = {
+
+export const UNO = {
   setup: function setup(main) {
     let initialRedrawStack = initialRedrawStackDefinition();
 
@@ -14,7 +15,14 @@ export const TicTacToe = {
       // Karten werden aus dem initialRedrawStack gelöscht, ein Deck muss also später neu erstellt werden
       handsOfAllPlayers.push(handOfOnePlayer);
     }
-    let initialThrowStack = [initialRedrawStack.pop()];
+    
+    let counter = initialRedrawStack.length-1
+    while (initialRedrawStack[counter] == "black"){
+      counter--
+    };
+    let initialThrowStack = initialRedrawStack[counter]
+    initialRedrawStack=removeElementAtIndex(initialRedrawStack, counter)
+
     let initialPlayingDirection = "withClock"
 
     let artificialG = {
@@ -42,8 +50,13 @@ export const TicTacToe = {
       }
       G.ThrowStack.push(chosenCardOfPlayer)
       G.handsOfAllPlayers[currentPlayer] = removeElementAtIndex(G.handsOfAllPlayers[currentPlayer], cardNumberInHand) 
-    }
+    },
+    drawCard: ({G, ctx}) => {
+      let currentPlayer = ctx.currentPlayer
+      G.handsOfAllPlayers[currentPlayer].push(G.RedrawStack.pop())
+    },
   },
+  
 
   turn: {
     minMoves: 1,

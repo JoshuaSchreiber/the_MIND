@@ -1,7 +1,7 @@
 import { Client } from "boardgame.io/client";
 import { Local, SocketIO } from "boardgame.io/multiplayer";
 import { resetOnClicks } from "./canvas";
-import { TicTacToe } from "./theMIND.js";
+import { UNO } from "./theMIND.js";
 import {drawPicture, onClick} from "./canvas.js";
 
 const isMultiplayer = import.meta.env.VITE_REMOTE === "true";
@@ -19,7 +19,7 @@ class GameClient {
     this.createBoard();
 
     this.client = Client({
-      game: TicTacToe,
+      game: UNO,
     });
 
     this.client.subscribe((state) => this.update(state));
